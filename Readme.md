@@ -4,6 +4,33 @@
 
 This project provides a fully functional, 4-node Docker Swarm cluster running entirely within Docker containers. By utilizing Docker-in-Docker (DinD) technology, this environment simulates a production-grade orchestration layer without the overhead of traditional Virtual Machines.
 
+---
+
+## Advantages
+
+The primary benefit of this architecture is extreme resource efficiency. By leveraging **Copy-on-Write (CoW)** at the storage layer and sharing the host's Linux kernel, we can run a full orchestration environment on standard hardware.
+
+### 1. Resource Consumption
+
+As shown in the performance monitor below, running 4 independent nodes (Manager + 3 Workers) alongside the host OS results in minimal CPU and RAM overhead. Unlike VirtualBox or VMware, which reserve fixed chunks of memory, DinD only consumes what the processes actually use.
+
+![Performance Monitor showing low RAM and CPU usage](images/image_7d43d9.png)
+
+### 2. Operational Health
+
+The Swarm Manager successfully orchestrates all nodes as independent entities. Each node runs its own internal Docker Engine, allowing for true multi-node service testing.
+
+![Terminal output showing 4 nodes in Ready status](images/image_7d477a.png)
+
+| Feature            | DinD Lab (Current)            | Oracle VirtualBox (Previous) |
+| :----------------- | :---------------------------- | :--------------------------- |
+| **RAM Usage**      | ~300MB for 4 nodes            | ~4GB for 4 nodes             |
+| **Disk Footprint** | Shared image layers (Minimal) | Multiple 10GB+ Virtual Disks |
+| **Boot Speed**     | Under 10 seconds              | 2 to 5 minutes               |
+| **Automation**     | Lean Makefile and Compose     | Manual VM configuration      |
+
+---
+
 ## Technical Implementation
 
 The architecture is built on three core pillars of Linux containerization:
@@ -23,20 +50,6 @@ We use the `docker:dind` image as the base for our nodes. Each node runs its own
 - **Bridge Network:** All nodes sit on a custom Docker bridge network called `swarm-net`.
 - **DNS Resolution:** Nodes join the cluster using the service name `manager` rather than volatile IP addresses.
 - **Routing Mesh:** The cluster utilizes the Ingress Routing Mesh, allowing any service published on a port to be reachable via the Manager's exposed ports on the host machine.
-
----
-
-## Advantages
-
-| Feature            | DinD Lab (Current)            | Oracle VirtualBox (Previous)       |
-| :----------------- | :---------------------------- | :--------------------------------- |
-| **RAM Usage**      | ~300MB for 4 nodes            | ~4GB for 4 nodes                   |
-| **Disk Footprint** | Shared image layers (Minimal) | Multiple 10GB+ Virtual Disks       |
-| **Boot Speed**     | Under 10 seconds              | 2 to 5 minutes                     |
-| **Automation**     | Lean Makefile and Compose     | Manual VM configuration            |
-| **Networking**     | Internal Docker DNS           | Complex Bridged/Host-only adapters |
-
----
 
 ## Getting Started
 
