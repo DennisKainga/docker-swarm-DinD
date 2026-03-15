@@ -1,0 +1,85 @@
+services:
+  manager:
+    image: docker:dind
+    container_name: swarm-manager
+    hostname: manager
+    command:
+      [
+        "dockerd",
+        "--host=unix:///var/run/docker.sock",
+        "--host=tcp://0.0.0.0:2375",
+      ]
+    privileged: true
+    ports:
+      - "80:80"
+      - "8080:8080"
+    networks:
+      swarm-net:
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    volumes:
+      - manager_data:/var/lib/docker
+
+  worker-1:
+    image: docker:dind
+    container_name: swarm-worker-1
+    hostname: worker-1
+    command:
+      [
+        "dockerd",
+        "--host=unix:///var/run/docker.sock",
+        "--host=tcp://0.0.0.0:2375",
+      ]
+    privileged: true
+    networks:
+      swarm-net:
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    volumes:
+      - worker1_data:/var/lib/docker
+
+  worker-2:
+    image: docker:dind
+    container_name: swarm-worker-2
+    hostname: worker-2
+    command:
+      [
+        "dockerd",
+        "--host=unix:///var/run/docker.sock",
+        "--host=tcp://0.0.0.0:2375",
+      ]
+    privileged: true
+    networks:
+      swarm-net:
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    volumes:
+      - worker2_data:/var/lib/docker
+
+  worker-3:
+    image: docker:dind
+    container_name: swarm-worker-3
+    hostname: worker-3
+    command:
+      [
+        "dockerd",
+        "--host=unix:///var/run/docker.sock",
+        "--host=tcp://0.0.0.0:2375",
+      ]
+    privileged: true
+    networks:
+      swarm-net:
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+    volumes:
+      - worker3_data:/var/lib/docker
+
+networks:
+  swarm-net:
+    driver: bridge
+
+volumes:
+  manager_data:
+  worker1_data:
+  worker2_data:
+  worker3_data:
