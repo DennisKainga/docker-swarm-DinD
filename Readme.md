@@ -1,5 +1,23 @@
 # Docker Swarm-in-Docker (DinD) Development Lab
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Advantages](#advantages)
+  - [Resource Consumption](#1-resource-consumption)
+  - [Operational Health](#2-operational-health)
+- [Technical Implementation](#technical-implementation)
+  - [Nested Containerization](#1-nested-containerization-dind)
+  - [Filesystem and Process Isolation](#2-filesystem-and-process-isolation)
+  - [Networking and Service Discovery](#3-networking-and-service-discovery)
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Deployment Steps](#deployment-steps)
+  - [Accessing the Cluster](#accessing-the-cluster)
+- [Management Commands](#management-commands)
+
+---
+
 ## Overview
 
 This project provides a fully functional, 4-node Docker Swarm cluster running entirely within Docker containers. By utilizing Docker-in-Docker (DinD) technology, this environment simulates a production-grade orchestration layer without the overhead of traditional Virtual Machines.
@@ -50,6 +68,8 @@ We use the `docker:dind` image as the base for our nodes. Each node runs its own
 - **Bridge Network:** All nodes sit on a custom Docker bridge network called `swarm-net`.
 - **DNS Resolution:** Nodes join the cluster using the service name `manager` rather than volatile IP addresses.
 - **Routing Mesh:** The cluster utilizes the Ingress Routing Mesh, allowing any service published on a port to be reachable via the Manager's exposed ports on the host machine.
+
+---
 
 ## Getting Started
 
