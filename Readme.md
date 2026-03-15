@@ -1,4 +1,4 @@
-# Docker Swarm-in-Docker (DinD) Development Lab
+## Docker Swarm-in-Docker (DinD) Development Lab
 
 ## Table of Contents
 
